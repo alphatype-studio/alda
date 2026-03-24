@@ -1,0 +1,36 @@
+{
+  "name": "@alphatype/alda-js",
+  "version": "0.1.0",
+  "description": "Parser and utilities for the Alda skeleton motion font format",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "files": [
+    "src/"
+  ],
+  "scripts": {
+    "test": "node test/index.test.js"
+  },
+  "keywords": [
+    "font",
+    "skeleton",
+    "motion",
+    "animation",
+    "alda",
+    "hangul",
+    "typography"
+  ],
+  "author": "Alphatype",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alphatype/alda.git",
+    "directory": "alda-js"
+  },
+  "homepage": "https://github.com/alphatype/alda#readme",
+  "bugs": {
+    "url": "https://github.com/alphatype/alda/issues"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/alphatype/alda/spec/schema.json",
+  "title": "Alda Font Format",
+  "description": "Schema for the Alda skeleton motion font format v0.1",
+  "type": "object",
+  "required": ["alda", "meta"],
+  "additionalProperties": false,
+  "properties": {
+    "alda": {
+      "type": "string",
+      "description": "Format version",
+      "examples": ["0.1"]
+    },
+    "meta": {
+      "type": "object",
+      "required": ["name", "upm", "ascender", "descender"],
+      "additionalProperties": false,
+      "properties": {
+        "name":       { "type": "string" },
+        "upm":        { "type": "number", "exclusiveMinimum": 0 },
+        "ascender":   { "type": "number" },
+        "descender":  { "type": "number" },
+        "version":    { "type": "string" },
+        "author":     { "type": "string" },
+        "license":    { "type": "string", "description": "SPDX identifier, e.g. 'OFL-1.1'" },
+        "created":    { "type": "string", "format": "date" }
+      }
+    },
+    "glyphs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/glyph" }
+    },
+    "animations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/animation" }
+    },
+    "fx": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fx" }
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "required": ["x", "y", "type"],
+      "properties": {
+        "x":    { "type": "number" },
+        "y":    { "type": "number" },
+        "type": { "type": "string", "enum": ["move", "line", "curve"] },
+        "cp1":  {
+          "type": "object",
+          "required": ["x", "y"],
+          "properties": { "x": { "type": "number" }, "y": { "type": "number" } }
+        },
+        "cp2":  {
+          "type": "object",
+          "required": ["x", "y"],
+          "properties": { "x": { "type": "number" }, "y": { "type": "number" } }
+        }
+      },
+      "if": { "properties": { "type": { "const": "curve" } } },
+      "then": { "required": ["cp1", "cp2"] }
+    },
+    "stroke": {
+      "type": "object",
+      "required": ["id", "points"],
+      "properties": {
+        "id":            { "type": "string" },
+        "points":        { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/point" } },
+        "closed":        { "type": "boolean" },
+        "width_profile": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 100 } }
+      }
+    },
+    "brush": {
+      "type": "object",
+      "required": ["rx", "ry", "angle"],
+      "properties": {
+        "rx":        { "type": "number", "exclusiveMinimum": 0 },
+        "ry":        { "type": "number", "exclusiveMinimum": 0 },
+        "angle":     { "type": "number", "description": "Radians" },
+        "roundness": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "anchor": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "glyph": {
+      "type": "object",
+      "required": ["unicode", "advance", "skeleton"],
+      "properties": {
+        "unicode":  { "type": "string", "pattern": "^[0-9A-Fa-f]{4,6}$" },
+        "name":     { "type": "string" },
+        "advance":  { "type": "number", "minimum": 0 },
+        "skeleton": { "type": "array", "items": { "$ref": "#/$defs/stroke" } },
+        "brush":    { "$ref": "#/$defs/brush" },
+        "anchors":  {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/anchor" }
+        }
+      }
+    },
+    "keyframe": {
+      "type": "object",
+      "required": ["t", "value"],
+      "properties": {
+        "t":      { "type": "number", "minimum": 0, "maximum": 1 },
+        "value":  { "type": "number" },
+        "easing": { "type": "string", "enum": ["linear", "ease-in", "ease-out", "ease-in-out", "spring"] }
+      }
+    },
+    "track": {
+      "type": "object",
+      "required": ["target", "property", "keyframes"],
+      "properties": {
+        "target":    { "type": "string" },
+        "property":  {
+          "type": "string",
+          "enum": ["stroke_progress", "brush.rx", "brush.ry", "brush.angle", "opacity", "offset.x", "offset.y"]
+        },
+        "keyframes": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/keyframe" } }
+      }
+    },
+    "animation": {
+      "type": "object",
+      "required": ["id", "duration", "tracks"],
+      "properties": {
+        "id":       { "type": "string" },
+        "label":    { "type": "string" },
+        "duration": { "type": "number", "exclusiveMinimum": 0 },
+        "loop":     { "type": "boolean" },
+        "tracks":   { "type": "array", "items": { "$ref": "#/$defs/track" } }
+      }
+    },
+    "fx": {
+      "type": "object",
+      "required": ["id", "type", "enabled"],
+      "properties": {
+        "id":      { "type": "string" },
+        "type":    { "type": "string", "enum": ["warp", "outline", "shadow", "roughen", "union"] },
+        "enabled": { "type": "boolean" },
+        "params":  { "type": "object" }
+      }
+    }
+  }
+}
