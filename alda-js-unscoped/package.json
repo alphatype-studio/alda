@@ -21,12 +21,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alphatype/alda.git",
+    "url": "https://github.com/alphatype-studio/alda.git",
     "directory": "alda-js-unscoped"
   },
-  "homepage": "https://github.com/alphatype/alda#readme",
+  "homepage": "https://github.com/alphatype-studio/alda#readme",
   "bugs": {
-    "url": "https://github.com/alphatype/alda/issues"
+    "url": "https://github.com/alphatype-studio/alda/issues"
   },
   "engines": {
     "node": ">=16"
