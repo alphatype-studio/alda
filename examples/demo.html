@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>alda-text demo</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 680px;
+      margin: 48px auto;
+      padding: 0 24px;
+      background: #f9f9f7;
+      color: #1e1e1e;
+    }
+    h1 { font-size: 1.4rem; font-weight: 600; margin-bottom: 8px; }
+    p  { color: #666; font-size: 0.9rem; margin: 0 0 32px; }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .card h2 { font-size: 0.8rem; font-weight: 500; color: #999; margin: 0 0 16px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .controls { display: flex; gap: 8px; margin-top: 16px; }
+    button {
+      padding: 6px 14px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    button:hover { background: #f5f5f5; }
+    code {
+      display: block;
+      margin-top: 24px;
+      background: #f5f5f3;
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      white-space: pre;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>alda-text demo</h1>
+  <p>Web component for Alda skeleton fonts. No JavaScript needed.</p>
+
+  <!-- 1. Static render -->
+  <div class="card">
+    <h2>Static</h2>
+    <alda-text id="static-el" src="hello-world.alda" width="400" height="120" font-size="80" color="#1e1e1e">가</alda-text>
+  </div>
+
+  <!-- 2. Animated with controls -->
+  <div class="card">
+    <h2>Animated — "write"</h2>
+    <alda-text id="anim-el" src="hello-world.alda" animate="write" loop="false" autoplay="false"
+               width="400" height="120" font-size="80" color="#1e60c8">가</alda-text>
+    <div class="controls">
+      <button onclick="document.getElementById('anim-el').play()">▶ Play</button>
+      <button onclick="document.getElementById('anim-el').pause()">⏸ Pause</button>
+      <button onclick="document.getElementById('anim-el').stop()">⏹ Stop</button>
+    </div>
+  </div>
+
+  <!-- 3. Loop -->
+  <div class="card">
+    <h2>Loop</h2>
+    <alda-text src="hello-world.alda" animate="write" loop="true" autoplay="true"
+               width="400" height="120" font-size="80" color="#c84040">가</alda-text>
+  </div>
+
+  <code>&lt;script src="https://cdn.jsdelivr.net/npm/alda-js/dist/alda-text.js"&gt;&lt;/script&gt;
+
+&lt;!-- static --&gt;
+&lt;alda-text src="font.alda" font-size="80"&gt;가&lt;/alda-text&gt;
+
+&lt;!-- animated --&gt;
+&lt;alda-text src="font.alda" animate="write" loop="true"&gt;가&lt;/alda-text&gt;</code>
+
+  <!--
+    In a real deployment this would load from CDN.
+    For local dev we use the CommonJS build via a simple bundler.
+    Run:  npx esbuild ../alda-js/src/alda-text.js ‑‑bundle ‑‑outfile=alda-text.bundle.js ‑‑platform=browser
+    Then: <script src="alda-text.bundle.js"></script>
+  -->
+  <script>
+    // Minimal browser shim: load via dynamic import of the bundled file.
+    // When served locally without a bundler, this falls back to a fetch-based
+    // approach — see README for build instructions.
+    if (!customElements.get('alda-text')) {
+      console.warn('[demo] alda-text not registered. Run: npx esbuild ../alda-js/src/alda-text.js --bundle --outfile=alda-text.bundle.js --platform=browser --format=iife --global-name=AldaText');
+    }
+  </script>
+</body>
+</html>

@@ -38,29 +38,45 @@ a   ← Animate
 
 ## Quick Start
 
+### Zero-JS web component (CDN)
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/alda-js/dist/alda-text.js"></script>
+
+<!-- static -->
+<alda-text src="font.alda" font-size="80">가</alda-text>
+
+<!-- animated, loops forever -->
+<alda-text src="font.alda" animate="write" loop="true">안녕하세요</alda-text>
+```
+
+Attributes: `src`, `text`, `animate`, `font-size`, `color`, `loop`, `autoplay`, `width`, `height`
+
+JS control: `el.play()` / `el.pause()` / `el.stop()` / `el.seek(t)`
+
+### npm
+
 ```bash
+npm install alda-js
+# or the scoped package
 npm install @alphatype/alda-js
 ```
 
 ```js
-import Alda from '@alphatype/alda-js'
+import { load, renderText, createPlayer } from 'alda-js'
 
-const font = Alda.load(aldaJsonString)
+const font = load(aldaJsonString)
 
+// Static canvas render
+renderText(ctx, font, '가', { fontSize: 80 })
+
+// Animated
+const player = createPlayer(ctx, font, '가', 'write', { loop: true })
+player.play()
+
+// Direct data access
 const glyph = font.getGlyphByChar('가')
 console.log(glyph.skeleton)         // stroke array
-
-const anim  = font.getAnimation('write')
-console.log(anim.tracks)            // keyframe tracks
-```
-
-Or in the browser without a bundler:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/@alphatype/alda-js/src/index.js"></script>
-<script>
-  const font = Alda.load(json)
-</script>
 ```
 
 ---
@@ -114,8 +130,7 @@ Strategy: like [Lottie](https://lottiefiles.com/) — the more the format spread
 
 ## Roadmap
 
-**v0.1 (now)** — Parser, brush utils, JSON Schema, sample files
-**v0.1.x** — `render()` canvas renderer, `play()` animation, `<alda-text>` web component
+**v0.1 (now)** — Parser, brush utils, canvas renderer, animation player, `<alda-text>` web component
 **v0.2** — Hangul jamo anchor system, `alda-cli` TTF→.alda converter
 **v0.3** — Binary `.aldab`, Figma plugin
 **v1.0** — Stability guarantee

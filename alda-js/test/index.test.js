@@ -177,6 +177,43 @@ test('normalize fills missing fields', () => {
   assert(typeof b.roundness === 'number');
 });
 
+console.log('\ninterpolateKeyframes()');
+test('returns start value before first keyframe', () => {
+  const kf = [{ t: 0.2, value: 0.5 }, { t: 0.8, value: 1.0 }];
+  assertEqual(Alda.interpolateKeyframes(kf, 0.0), 0.5);
+});
+test('returns end value after last keyframe', () => {
+  const kf = [{ t: 0.0, value: 0.0 }, { t: 1.0, value: 1.0 }];
+  assertEqual(Alda.interpolateKeyframes(kf, 1.0), 1.0);
+});
+test('interpolates linearly between keyframes', () => {
+  const kf = [{ t: 0.0, value: 0.0 }, { t: 1.0, value: 1.0 }];
+  const mid = Alda.interpolateKeyframes(kf, 0.5);
+  assert(Math.abs(mid - 0.5) < 0.0001, `expected 0.5, got ${mid}`);
+});
+test('returns 1 for empty keyframe array', () => {
+  assertEqual(Alda.interpolateKeyframes([], 0.5), 1);
+});
+
+console.log('\nbuildStrokeProgress()');
+test('produces progress map from animation tracks', () => {
+  const font = Alda.load(FULL);
+  const anim = font.getAnimation('write');
+  // At t=0.5 with linear kf [0→1], progress should be ~0.5
+  const sp = Alda.buildStrokeProgress(anim, 0.5);
+  assert(typeof sp['stroke-0'] === 'number', 'expected number for stroke-0');
+  assert(Math.abs(sp['stroke-0'] - 0.5) < 0.0001, `expected ~0.5, got ${sp['stroke-0']}`);
+});
+test('ignores non-progress properties', () => {
+  const anim = {
+    id: 'x', duration: 1, tracks: [
+      { target: 's0', property: 'opacity', keyframes: [{ t: 0, value: 0 }, { t: 1, value: 1 }] },
+    ],
+  };
+  const sp = Alda.buildStrokeProgress(anim, 0.5);
+  assert(!('s0' in sp), 'opacity track should not appear in strokeProgress');
+});
+
 // ── Result ──────────────────────────────────────────────────
 console.log(`\n${passed + failed} tests: ${passed} passed, ${failed} failed\n`);
 if (failed > 0) process.exit(1);

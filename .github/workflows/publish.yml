@@ -16,7 +16,7 @@ jobs:
       - name: Run tests
         run: node alda-js/test/index.test.js
 
-  publish:
+  build:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -24,9 +24,50 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Build browser bundle
+        run: |
+          cd alda-js
+          npx esbuild src/alda-text.js --bundle --outfile=dist/alda-text.js --platform=browser --format=iife --global-name=AldaText --minify
+          cp -r dist ../alda-js-unscoped/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: alda-js/dist/
+
+  publish-scoped:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-      - name: Publish to npm
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: alda-js/dist/
+      - name: Publish @alphatype/alda-js
         run: npm publish --access=public
         working-directory: alda-js
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-unscoped:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: alda-js-unscoped/dist/
+      - name: Publish alda-js
+        run: npm publish --access=public
+        working-directory: alda-js-unscoped
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -112,6 +112,101 @@ export declare class AldaFont {
   toJSON(): string;
 }
 
+// ── Renderer ─────────────────────────────────────────────────
+
+export interface RenderOpts {
+  fontSize?: number;
+  x?: number;
+  y?: number;
+  color?: string;
+  letterSpacing?: number;
+}
+
+export interface LayoutItem {
+  glyph: AldaGlyph | null;
+  char: string;
+  ox: number;
+}
+
+/** Render all glyphs of `text` at full (static) display. */
+export declare function renderText(
+  ctx: CanvasRenderingContext2D,
+  font: AldaFont,
+  text: string,
+  opts?: RenderOpts,
+): void;
+
+/** Render with per-stroke progress values (for animation). */
+export declare function renderFrame(
+  ctx: CanvasRenderingContext2D,
+  font: AldaFont,
+  text: string,
+  strokeProgress: Record<string, number>,
+  opts?: RenderOpts,
+): void;
+
+/** Resolve glyphs and compute X positions. */
+export declare function buildLayout(
+  font: AldaFont,
+  text: string,
+  fontSize: number,
+): LayoutItem[];
+
+export declare function drawStroke(
+  ctx: CanvasRenderingContext2D,
+  stroke: AldaStroke,
+  progress: number,
+  brush: AldaBrush,
+  opts: { upm: number; fontSize: number; ox: number; baseline: number; color?: string },
+): void;
+
+export declare function sampleStroke(
+  stroke: AldaStroke,
+  upm: number,
+  fontSize: number,
+  ox: number,
+  baseline: number,
+): { pts: Array<{x: number; y: number}>; arcLen: number[]; total: number };
+
+// ── Player ───────────────────────────────────────────────────
+
+export interface PlayerOpts extends RenderOpts {
+  loop?: boolean;
+  onEnd?: () => void;
+  onFrame?: (t: number) => void;
+}
+
+export declare class AldaPlayer {
+  readonly currentTime: number;
+  readonly playing: boolean;
+
+  play(): this;
+  pause(): this;
+  stop(): this;
+  seek(t: number): this;
+  dispose(): void;
+}
+
+export declare function createPlayer(
+  ctx: CanvasRenderingContext2D,
+  font: AldaFont,
+  text: string,
+  animation: string | AldaAnimation,
+  opts?: PlayerOpts,
+): AldaPlayer;
+
+export declare function buildStrokeProgress(
+  animation: AldaAnimation,
+  t: number,
+): Record<string, number>;
+
+export declare function interpolateKeyframes(
+  keyframes: AldaKeyframe[],
+  t: number,
+): number;
+
+// ── Brush ────────────────────────────────────────────────────
+
 export declare const brush: {
   computeS(rx: number, ry: number): number;
   computeRy(S: number, rx: number): number;
@@ -134,6 +229,14 @@ export declare function isValid(data: unknown): boolean;
 declare const Alda: {
   load: typeof load;
   isValid: typeof isValid;
+  renderText: typeof renderText;
+  renderFrame: typeof renderFrame;
+  buildLayout: typeof buildLayout;
+  drawStroke: typeof drawStroke;
+  sampleStroke: typeof sampleStroke;
+  createPlayer: typeof createPlayer;
+  buildStrokeProgress: typeof buildStrokeProgress;
+  interpolateKeyframes: typeof interpolateKeyframes;
   brush: typeof brush;
 };
 

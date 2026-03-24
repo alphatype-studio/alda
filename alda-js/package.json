@@ -5,10 +5,13 @@
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "files": [
-    "src/"
+    "src/",
+    "dist/"
   ],
   "scripts": {
-    "test": "node test/index.test.js"
+    "test": "node test/index.test.js",
+    "build": "npx esbuild src/alda-text.js --bundle --outfile=dist/alda-text.js --platform=browser --format=iife --global-name=AldaText --minify",
+    "build:dev": "npx esbuild src/alda-text.js --bundle --outfile=dist/alda-text.js --platform=browser --format=iife --global-name=AldaText --sourcemap"
   },
   "keywords": [
     "font",

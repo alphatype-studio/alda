@@ -1,0 +1,34 @@
+{
+  "name": "alda-js",
+  "version": "0.1.0",
+  "description": "Parser, renderer and web component for the Alda skeleton motion font format",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "dist/"
+  ],
+  "scripts": {
+    "test": "node ../alda-js/test/index.test.js",
+    "build": "cd ../alda-js && npm run build && cp -r dist ../alda-js-unscoped/"
+  },
+  "keywords": [
+    "font", "skeleton", "motion", "animation", "alda", "hangul", "typography",
+    "web-component", "custom-element"
+  ],
+  "author": "Alphatype",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alphatype/alda.git",
+    "directory": "alda-js-unscoped"
+  },
+  "homepage": "https://github.com/alphatype/alda#readme",
+  "bugs": {
+    "url": "https://github.com/alphatype/alda/issues"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
