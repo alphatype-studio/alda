@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>alda-text test</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #0f0f0f;
+      color: #f0f0f0;
+      font-family: system-ui, sans-serif;
+    }
+    h2 { color: #888; font-size: 13px; font-weight: 400; margin: 32px 0 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+    .card { background: #1a1a1a; border-radius: 12px; padding: 24px; }
+    button {
+      background: #333; color: #eee; border: none; padding: 6px 14px;
+      border-radius: 6px; cursor: pointer; font-size: 13px;
+    }
+    button:hover { background: #444; }
+  </style>
+</head>
+<body>
+
+  <h2>Static render</h2>
+  <div class="card">
+    <alda-text
+      src="./hello-world.alda"
+      font-size="120"
+      color="#f0f0f0"
+      width="200"
+      height="160">가</alda-text>
+  </div>
+
+  <h2>Animated — write (loop)</h2>
+  <div class="card">
+    <alda-text
+      id="anim"
+      src="./hello-world.alda"
+      animate="write"
+      loop="true"
+      font-size="120"
+      color="#7eb8f7"
+      width="200"
+      height="160">가</alda-text>
+  </div>
+
+  <h2>Controls</h2>
+  <div class="row">
+    <button onclick="document.getElementById('anim').play()">Play</button>
+    <button onclick="document.getElementById('anim').pause()">Pause</button>
+    <button onclick="document.getElementById('anim').stop()">Stop</button>
+    <button onclick="document.getElementById('anim').seek(0.5)">Seek 50%</button>
+  </div>
+
+  <h2>CDN snippet (copy this)</h2>
+  <pre style="background:#1a1a1a;padding:16px;border-radius:8px;font-size:12px;color:#aaa;overflow-x:auto">&lt;script src="https://cdn.jsdelivr.net/npm/alda-js/dist/alda-text.js"&gt;&lt;/script&gt;
+&lt;alda-text src="font.alda" animate="write"&gt;가&lt;/alda-text&gt;</pre>
+
+  <!-- local bundle (use CDN in production) -->
+  <script src="/alda-js/dist/alda-text.js"></script>
+
+</body>
+</html>
